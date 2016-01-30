@@ -1,0 +1,8 @@
+<html>
+  <head>
+    <title>正在加载</title>
+    <script>
+      window.location.href = '<%= @angular_url %>';
+    </script>
+  </body>
+</html>

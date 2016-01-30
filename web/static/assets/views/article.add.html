@@ -1,0 +1,30 @@
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container">
+            <div id="uploadContainer" hidden="true">
+                <input type="button" class="wangEditor-modal-btn" value="选择文件" id="btnBrowse"/>
+                <input type="button" class="wangEditor-modal-btn" value="上传文件" id="btnUpload">
+                <ul id="fileList"></ul>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">编写新的文章</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="text" class="form-control" ng-model="article.title"
+                               name="title" placeholder="请输入标题" value="{{article.title}}">
+                    </div>
+                    <div class="form-group">
+
+                <textarea class="ttWangEditor" name="content" id="articleEditor"
+                          bucket="bucket" content="article.content"
+                          style='height:200px; max-height:600px; width:100%;'>
+                </textarea>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button ng-click="saveArticle()" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

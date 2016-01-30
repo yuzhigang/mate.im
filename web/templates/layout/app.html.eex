@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html ng-app="MateIM">
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <title>Mate.im</title>
+
+  <link href="favicon.png" rel="icon" type="image/png">
+
+</head>
+  <body class="skin-purple-light layout-top-nav">
+ 
+    <%= render @view_module, @view_template, assigns %>
+
+  <link rel="stylesheet" href="<%= static_path(@conn, "/vendor/bootstrap/css/bootstrap.min.css") %>">
+  <link href="https://cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://cdn.bootcss.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="<%= static_path(@conn, "/vendor/AdminLTE/css/AdminLTE.min.css") %>">
+  <link rel="stylesheet" href="<%= static_path(@conn, "/vendor/AdminLTE/css/skins/skin-purple-light.min.css") %>">
+  <link rel="stylesheet" href="<%= static_path(@conn, "/vendor/highlight/css/github.css") %>">
+  <link rel="stylesheet" href="<%= static_path(@conn, "/vendor/editor/css/wangEditor.css") %>">
+  <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+
+  <script src="<%= static_path(@conn, "/vendor/bootstrap/js/bootstrap.min.js") %>"></script>
+  <script src="<%= static_path(@conn, "/vendor/AdminLTE/js/app.min.js") %>"></script>
+  <script src="<%= static_path(@conn, "/vendor/highlight/js/highlight.pack.js") %>"></script>
+  
+  <script src="https://cdn.bootcss.com/plupload/2.1.7/plupload.full.min.js"></script>
+  <script src="<%= static_path(@conn, "/vendor/editor/js/wangEditor.min.js") %>"></script>
+  </body>
+</html>

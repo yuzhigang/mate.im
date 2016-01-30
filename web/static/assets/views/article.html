@@ -1,0 +1,114 @@
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container">
+            <div class="col-md-9">
+                <div id="uploadContainer" hidden="true">
+                    <input type="button" class="wangEditor-modal-btn" value="选择文件" id="btnBrowse"/>
+                    <input type="button" class="wangEditor-modal-btn" value="上传文件" id="btnUpload">
+                    <ul id="fileList"></ul>
+                </div>
+
+                <article class="panel panel-default">
+                    <header class="panel-heading" ng-if="!articleEditing">
+                        <div>{{article.title}}</div>
+                    </header>
+
+                    <div class="panel-body" ng-if="!articleEditing">
+                        <div class="markdown-text" ng-bind-html="article.content | unsafe">
+                        </div>
+                    </div>
+                    <div class="panel-body" ng-if="articleEditing">
+                        <div class="form-group">
+                            <input type="text" class="form-control" ng-model="article.title"
+                                   name="title" placeholder="请输入标题" value="{{article.title}}">
+                        </div>
+                        <div class="form-group">
+
+                <textarea class="ttWangEditor" name="content" id="articleEditor"
+                          bucket="bucket" content="article.content"
+                          style='height:200px; max-height:600px; width:100%;'>
+                </textarea>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div ng-if="articleOwner(article) && !articleEditing && !commentEditing">
+                            <button ng-click="deleteArticle(article)" class="btn btn-danger">删除</button>
+                            <button ng-click="editArticle()" class="btn btn-primary">编辑</button>
+                            <button ng-click="createComment(article)" class="btn btn-primary">我要说两句</button>
+                        </div>
+                        <div ng-if="!articleOwner(article) && !articleEditing && !commentEditing">
+                            <button ng-click="createComment(article)" class="btn btn-primary">我要说两句</button>
+                        </div>
+                        <div ng-if="articleOwner(article) && articleEditing && !commentEditing">
+                            <button ng-click="saveArticle()" class="btn btn-primary">保存</button>
+                        </div>
+                    </div>
+                </article>
+                <div class="panel panel-default" ng-if="commentEditing">
+                    <div class="panel-body">
+                        <div class="form-group">
+            <textarea class="ttWangEditor" name="content" id="commentEditor"
+                      bucket="bucket" content="currentComment.content"
+                      style='height:200px; max-height:600px; width:100%;'>
+            </textarea>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <button ng-click="saveComment()" class="btn btn-primary">说完了</button>
+                        <button ng-click="quitCommentEditor()" class="btn btn-danger">算了吧</button>
+                    </div>
+                </div>
+                <div class="panel panel-default comments">
+                    <header class="panel-heading">
+                        共有{{article.comments_count}}条评论
+                    </header>
+                    <ul class="comment_list list-group" ng-if="hasComments(article)">
+                        <li class="list-group-item media" ng-repeat="comment in comments | orderBy:'inserted_at':true">
+                            <div class="media-left">
+                                <a href="/users/{{comment.user_id}}" class="user_avatar">
+                                    <img ng-src="{{comment.user.avatar}}" height="48" width="48" class="img-rounded">
+                                </a>
+                            </div>
+                            <div class="media-body reply_content">
+                                <h6 class="media-heading">
+                                    <small class="media-heading">
+                                        于
+                                        {{comment.inserted_at}}
+                                        发表
+                                    </small>
+                        <span class="pull-right" ng-if="commentOwner(comment)">
+                            <button ng-click="deleteComment(comment)" class="btn btn-danger">删除</button>
+                        </span>
+                                </h6>
+                                <div class="markdown-text" ng-bind-html="comment.content | unsafe"></div>
+                            </div>
+                        </li>
+                        <li class="topics_pagination list-group-item">
+                            <span ng-click="prePage()" class="label label-default">上一页</span>
+                            <span ng-bind="currentPage"></span>
+                            <span ng-click="nextPage()" class="label label-default">下一页</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="box box-widget widget-user">
+                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                    <div class="widget-user-header bg-aqua-active">
+                        <h2 class="widget-user-username">{{article.user.name}}
+                        </h2>
+                    </div>
+                    <div class="widget-user-image">
+                        <img class="img-circle" src="{{article.user.avatar}}" alt="User Avatar">
+                    </div>
+                    <div class="box-footer">
+
+                        <dl>
+                            <dd><a href="/users/{{article.user.id}}" target="_blank">他的主页</a></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

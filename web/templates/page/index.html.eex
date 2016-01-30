@@ -1,0 +1,195 @@
+<div class="tt-app-loading" ng-animate-children>
+
+    <!--
+      HACKY CODE WARNING: I'm putting Style block inside directive so that it
+      will be removed from the DOM when we remove the directive container.
+    -->
+    <style type="text/css">
+      div.tt-app-loading {
+        position: fixed ;
+      }
+      div.tt-app-loading div.animated-container {
+        background-color: #333333 ;
+        bottom: 0px ;
+        left: 0px ;
+        opacity: 1.0 ;
+        position: fixed ;
+        right: 0px ;
+        top: 0px ;
+        z-index: 999999 ;
+      }
+      /* Used to initialize the ng-leave animation state. */
+      div.tt-app-loading div.animated-container.ng-leave {
+        opacity: 1.0 ;
+        transition: all linear 200ms ;
+          -webkit-transition: all linear 200ms ;
+      }
+      /* Used to set the end properties of the ng-leave animation state. */
+      div.tt-app-loading div.animated-container.ng-leave-active {
+        opacity: 0 ;
+      }
+      div.tt-app-loading div.messaging {
+        color: #FFFFFF ;
+        font-family: monospace ;
+        left: 0px ;
+        margin-top: -37px ;
+        position: absolute ;
+        right: 0px ;
+        text-align: center ;
+        top: 50% ;
+      }
+      div.tt-app-loading h1 {
+        font-size: 26px ;
+        line-height: 35px ;
+        margin: 0px 0px 20px 0px ;
+      }
+      div.tt-app-loading p {
+        font-size: 18px ;
+        line-height: 14px ;
+        margin: 0px 0px 0px 0px ;
+      }
+    </style>
+
+
+    <!-- BEGIN: Actual animated container. -->
+    <div class="animated-container">
+
+      <div class="messaging">
+
+        <h1>
+          加载Mate.im中
+        </h1>
+
+        <p>
+          在Mate.im中发现和你有相同爱好的人
+        </p>
+
+      </div>
+
+    </div>
+    <!-- END: Actual animated container. -->
+
+</div>
+<div class="wrapper">
+<header class="main-header" ng-controller="NavbarCtrl">
+  <nav class="navbar navbar-static-top" role="navigation">
+    <div class="container">
+    <div class="navbar-header">
+      <div class="navbar-brand">
+        <span><strong>Mate.im</strong></span>
+      </div>
+      <button type="button"
+        class="navbar-toggle collapsed"
+        data-toggle="collapse" 
+        data-target="#navbar-collapse" 
+        aria-expanded="false">
+          <i class="fa fa-bars"></i>
+      </button>
+    </div>
+
+    <div class="navbar-collapse navbar-left collapse" 
+         id="navbar-collapse"
+         aria-expanded="false">
+          <ul class="nav navbar-nav">
+        <li data-match-route="/$"><a href="/$">文章列表</a></li>
+        <li data-match-route="/posts/new" ng-if="currentUser">
+          <a href="/posts/new">编写新文章</a>
+        </li>
+      </ul>
+
+    </div>
+  <div class="navbar-custom-menu" ng-if="currentUser">
+    <ul class="nav navbar-nav">
+      <li class="dropdown user user-menu">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img ng-src="{{currentUser.avatar}}" class="user-image" alt="User Image">
+          <span class="hidden-xs">{{currentUser.name}}</span>
+        </a>
+        <ul class="dropdown-menu">
+        <!-- The user image in the menu -->
+          <li class="user-header">
+            <img ng-src="{{currentUser.avatar}}" class="img-circle" alt="User Image">
+            <p>{{currentUser.name}}</p>
+          </li>
+          <li class="user-footer">
+            <div class="row">
+                <div class="col-md-6">
+                  <a href="javascript:void(0)" ng-click="logout()" class="btn btn-default btn-block"> 
+                    <i class="fa fa-sign-out"></i> 注 消
+                  </a>
+                </div>
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="navbar-custom-menu">
+      <ul class="nav navbar-nav pull-right" ng-if="!currentUser">
+        <li data-match-route="/signin"><a href="/signin">登录</a></li>
+        <li data-match-route="/signup"><a href="/signup">注册</a></li>
+      </ul>
+  </div>
+</nav>
+</header>
+
+<div ng-view class="{{pageClass}}"></div>
+<script src="<%= static_path(@conn, "/js/vendor.js") %>"></script>
+
+<script type="text/javascript">
+angular.module('MateIM', ['ngResource', 'ngSanitize','angularFileUpload',
+  'ngMessages', 'ngRoute', 'ngAnimate', 'mgcrea.ngStrap'])
+  .config(function ($routeProvider, $locationProvider) {
+    $locationProvider.html5Mode(true);
+
+    $routeProvider
+      .when('/', {
+        templateUrl: '<%= static_path(@conn, "/views/home.html") %>',
+        controller: 'MainCtrl'
+      })
+      .when('/posts/new', {
+        templateUrl: '<%= static_path(@conn, "/views/article.add.html") %>',
+        controller: 'ArticleAddCtrl'
+      })
+      .when('/posts/:id', {
+        templateUrl: '<%= static_path(@conn, "/views/article.html") %>',
+        controller: 'ArticleCtrl'
+      })
+      .when('/signin', {
+        templateUrl: '<%= static_path(@conn, "/views/signin.html") %>',
+        controller: 'SigninCtrl'
+      })
+      .when('/signup', {
+        templateUrl: '<%= static_path(@conn, "/views/signup.html") %>',
+        controller: 'SignupCtrl'
+      })
+      .otherwise({
+        redirectTo: '/'
+      });
+  })
+  .config(function ($httpProvider) {
+    $httpProvider.interceptors.push(function ($rootScope, $q, $window, $location) {
+      return {
+        request: function(config) {
+          if ($window.localStorage.token) {
+            config.headers.Authorization = 'Bearer ' + $window.localStorage.token;
+          }
+          return config;
+        },
+        responseError: function(response) {
+          if (response.status === 401 || response.status === 403) {
+            $location.path('/signin');
+          }
+          return $q.reject(response);
+        }
+      }
+    });
+});
+
+/*setTimeout(
+  function asyncBootstrap() {
+    angular.bootstrap( document, [ "MateIM" ] );
+  },( 2 * 1000 )
+);*/
+</script>
+<script src="<%= static_path(@conn, "/js/app.js") %>"></script>
