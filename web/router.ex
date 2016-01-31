@@ -22,17 +22,19 @@ defmodule Mate.Router do
 
   # Other scopes may use custom stacks.
   scope "/api", Mate do
-     pipe_through :api
+    pipe_through :api
 
-     resources "/posts", PostController, except: [:new, :edit] do
+    resources "/posts", PostController, except: [:new, :edit] do
       resources "/comments", CommentController, except: [:new, :show, :edit, :update]
     end
 
+    resources "/users", UserController, only: [:show, :update]
 
-     post "auth/signup", AuthController, :signup
-     post "auth/signin", AuthController, :signin
-     get "auth/email", AuthController, :email
-     get "auth/verify", AuthController, :verify
-     get "upyun/bucket", UpyunController, :bucket
+    post "auth/signup", AuthController, :signup
+    post "auth/signin", AuthController, :signin
+    get "auth/email", AuthController, :email
+    get "auth/verify", AuthController, :verify
+    get "upyun/bucket", UpyunController, :bucket
+    
   end
 end

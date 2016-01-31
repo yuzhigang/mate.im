@@ -155,6 +155,10 @@ angular.module('MateIM', ['ngResource', 'ngSanitize','angularFileUpload',
         templateUrl: '<%= static_path(@conn, "/views/article.html") %>',
         controller: 'ArticleCtrl'
       })
+      .when('/users/:id', {
+        templateUrl: '<%= static_path(@conn, "/views/user.html") %>',
+        controller: 'UserCtrl'
+      })
       .when('/signin', {
         templateUrl: '<%= static_path(@conn, "/views/signin.html") %>',
         controller: 'SigninCtrl'

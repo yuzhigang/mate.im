@@ -1,0 +1,74 @@
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container">
+            <div class="col-md-9">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        {{user.name}}的帖子
+                    </div>
+                    <div class="panel-body">
+                        <ul class="topic_list list-group">
+                            <li class="list-group-item media"
+                                ng-repeat="article in articles | orderBy:'updated_at':true">
+
+                                <div class="media-left">
+                                    <a class="user_avatar" href="/users/{{article.user.id}}">
+                                        <img ng-src="{{article.user.avatar}}" height="48" width="48"
+                                             class="img-rounded">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">
+                                        <a href="/posts/{{article.id}}">
+                                            {{article.title}}
+                                        </a>
+                                    </h4>
+                                    <h5 class="media-heading small">
+                                        <large id="post_small">
+                                            <a href="/users/{{article.user.id}}"
+                                               class="author">{{article.user.name}}</a>
+                                            的文章于{{article.update_at}}最后更新
+                                        </large>
+                                    </h5>
+                                </div>
+                                <div class="media-right">
+                                    <h4>
+                                        <div ng-if="hasComments(article)">
+                                            <div class="label label-primary">
+                                                {{article.comments_count}}
+                                            </div>
+                                        </div>
+                                        <div ng-if="!hasComments(article)">
+                                            <div class="label label-default">
+                                                {{article.comments_count}}
+                                            </div>
+                                        </div>
+                                    </h4>
+                                </div>
+                            </li>
+                            <li class="topics_pagination list-group-item">
+                                <span ng-click="prePage()" class="label label-default">上一页</span>
+                                <span ng-bind="currentPage"></span>
+                                <span ng-click="nextPage()" class="label label-default">下一页</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="box box-widget widget-user">
+                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                    <div class="widget-user-header bg-aqua-active">
+                        <h2 class="widget-user-username">{{user.name}}
+                        </h2>
+                    </div>
+                    <div class="widget-user-image">
+                        <img class="img-circle" ng-src="{{user.avatar}}" alt="User Avatar">
+                    </div>
+                    <div class="box-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

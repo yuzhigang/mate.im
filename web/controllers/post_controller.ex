@@ -9,6 +9,13 @@ defmodule Mate.PostController do
 
   @posts_per_page 5
 
+  def index(conn,%{"user_id"=> user_id, "page" => page}) do
+    uid = String.to_integer(user_id)
+    page = String.to_integer(page)
+    posts = get_user_posts_by_page(page,uid)
+    render conn, "index.json", posts: posts
+
+  end
   def index(conn, %{"page" => page} = params) do
     render conn, "index.json", posts: get_posts_by_page(page)
   end
@@ -94,6 +101,19 @@ defmodule Mate.PostController do
       group_by: p.id,
       preload: [:user])
     List.first(Repo.all(query))
+  end
+
+  # 根据用户ID获得
+  defp get_user_posts_by_page(page,uid) do
+    Repo.all(from p in Post, 
+      where: p.user_id == ^uid, 
+      left_join: c in assoc(p, :comments),
+      select: %{post: p, comments_count: count(c.id)},
+      group_by: p.id,
+      order_by: [{:desc, p.updated_at}], 
+      limit: ^@posts_per_page,
+      offset: ^((page - 1) * @posts_per_page), 
+      preload: [:user])
   end
 
   defp validate_and_get_post(conn, id) do

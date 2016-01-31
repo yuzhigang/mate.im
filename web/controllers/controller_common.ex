@@ -57,6 +57,10 @@ defmodule Mate.ControllerCommon do
     |> put_status(401)
     |> text "unauthorized"
   end
+
+  def home(conn) do
+    redirect conn, to: "/"
+  end
   
   def avatar_url(email) do
     hash = email
