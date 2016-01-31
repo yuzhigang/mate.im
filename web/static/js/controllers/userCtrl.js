@@ -53,6 +53,12 @@ angular.module('MateIM')
             });
         };
 
+        $scope.hasComments = function(article){
+            if (null == article || undefined == article){
+                return false;
+            }
+            return article.comments_count > 0;
+        };
         //前一页
         $scope.prePage = function () {
             $scope.currentPage = $scope.currentPage - 1;

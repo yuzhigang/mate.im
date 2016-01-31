@@ -18,20 +18,32 @@ angular.module('MateIM')
             signin: function (user) {
                 return $http.post('api/auth/signin', user)
                     .success(function (data) {
-                        $window.localStorage.token = data.token;
-                        var payload = JSON.parse($window.atob(data.token.split('.')[1]));
-                        $rootScope.currentUser = payload;
-                        $location.path('/');
-                        $alert({
-                            title: '欢迎回来！',
-                            content: '您已经成功登录',
-                            animation: 'fadeZoomFadeDown',
-                            type: 'material',
-                            duration: 3
-                        });
+                        if (data.token == ""){
+                            $alert({
+                                title: '出错了！',
+                                content: '无效的用户名或密码',
+                                animation: 'fadeZoomFadeDown',
+                                type: 'material',
+                                duration: 3
+                            });
+                        }else{
+                            $window.localStorage.token = data.token;
+                            var payload = JSON.parse($window.atob(data.token.split('.')[1]));
+                            $rootScope.currentUser = payload;
+                            $location.path('/');
+                            $alert({
+                                title: '欢迎回来！',
+                                content: '您已经成功登录',
+                                animation: 'fadeZoomFadeDown',
+                                type: 'material',
+                                duration: 3
+                            });
+                        }
+
                     })
                     .error(function () {
                         delete $window.localStorage.token;
+                        $rootScope.currentUser = null;
                         $alert({
                             title: '出错了！',
                             content: '无效的用户名或密码',
